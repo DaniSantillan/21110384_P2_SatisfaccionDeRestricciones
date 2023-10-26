@@ -1,0 +1,49 @@
+class CSP:
+    def __init__(self, variables, domains, neighbors, constraints):
+        self.variables = variables
+        self.domains = domains
+        self.neighbors = neighbors
+        self.constraints = constraints
+
+    def is_consistent(self, assignment, var, value):
+        for neighbor in self.neighbors[var]:
+            if neighbor in assignment and not self.constraints(var, value, neighbor, assignment[neighbor]):
+                return False
+        return True
+
+    def select_unassigned_variable(self, assignment):
+        unassigned = [var for var in self.variables if var not in assignment]
+        return min(unassigned, key=lambda var: -len(self.neighbors[var]))
+
+    def order_domain_values(self, var, assignment):
+        values = self.domains[var][:]
+        values.sort(key=lambda val: sum(self.constraints(var, val, neighbor, assignment[neighbor])
+                                       for neighbor in self.neighbors[var] if neighbor in assignment), reverse=True)
+        return values
+
+    def backtrack(self, assignment):
+        if len(assignment) == len(self.variables):
+            return assignment
+
+        var = self.select_unassigned_variable(assignment)
+        for value in self.order_domain_values(var, assignment):
+            if self.is_consistent(assignment, var, value):
+                assignment[var] = value
+                result = self.backtrack(assignment)
+                if result is not None:
+                    return result
+                del assignment[var]
+        return None
+
+def graph_coloring_constraint(var1, val1, var2, val2):
+    return val1 != val2
+
+# Ejemplo de uso
+variables = ['A', 'B', 'C']
+domains = {'A': ['R', 'G', 'B'], 'B': ['R', 'G', 'B'], 'C': ['R', 'G', 'B']}
+neighbors = {'A': ['B', 'C'], 'B': ['A', 'C'], 'C': ['A', 'B']}
+constraints = graph_coloring_constraint
+
+csp = CSP(variables, domains, neighbors, constraints)
+result = csp.backtrack({})
+print(result)
