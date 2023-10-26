@@ -1,0 +1,22 @@
+from constraint import Problem
+
+# Crear una instancia del problema
+problem = Problem()
+
+# Definir las variables y sus rangos de valores (1 a 9)
+problem.addVariable('A', range(1, 10))
+problem.addVariable('B', range(1, 10))
+problem.addVariable('C', range(1, 10))
+
+# Definir la restricción: la suma de las variables debe ser igual a 15
+def constraint_function(a, b, c):
+    return a + b + c == 15
+
+problem.addConstraint(constraint_function, ('A', 'B', 'C'))
+
+# Resolver el problema
+solutions = problem.getSolutions()
+
+# Imprimir las soluciones encontradas
+for solution in solutions:
+    print(solution)
