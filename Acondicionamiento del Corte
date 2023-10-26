@@ -1,0 +1,20 @@
+from itertools import product
+
+def restriccion_suma(seleccion):
+    return sum(seleccion) == 6
+
+def acondicionamiento_corte(variables, dominio, restriccion):
+    for seleccion in product(*dominio):
+        if restriccion(seleccion):
+            yield seleccion
+
+# Definimos las variables y su dominio
+variables = ['Var1', 'Var2', 'Var3']
+dominio = [range(1, 4) for _ in variables]
+
+# Aplicamos el acondicionamiento del corte
+soluciones = list(acondicionamiento_corte(variables, dominio, restriccion_suma))
+
+print("Soluciones:")
+for solucion in soluciones:
+    print(solucion)
