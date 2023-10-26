@@ -1,0 +1,35 @@
+def forward_checking(variable, value, assignment, constraints):
+    assignment[variable] = value
+
+    for neighbor in constraints.get(variable, []):
+        if neighbor not in assignment:
+            for neighbor_value in assignment[neighbor]:
+                if not satisfies_constraints(neighbor, neighbor_value, assignment, constraints):
+                    assignment[neighbor].remove(neighbor_value)
+            
+            if not assignment[neighbor]:
+                # No hay valores posibles para la variable vecina
+                return False
+
+    return True
+
+def satisfies_constraints(variable, value, assignment, constraints):
+    # Aquí defines tus restricciones específicas
+    # Retorna True si se cumplen las restricciones, False en caso contrario
+    # Puedes personalizar esta función según tus necesidades
+    return True
+
+# Ejemplo de uso
+variables = ['A', 'B', 'C']
+domains = {'A': [1, 2, 3], 'B': [1, 2, 3], 'C': [1, 2, 3]}
+assignment = {}
+
+constraints = {'A': ['B', 'C'], 'B': ['A'], 'C': ['A']}
+
+for variable in variables:
+    value = domains[variable][0]
+    if not forward_checking(variable, value, assignment, constraints):
+        print(f"No hay solución para la variable {variable}")
+        break
+
+print("Asignación final:", assignment)
