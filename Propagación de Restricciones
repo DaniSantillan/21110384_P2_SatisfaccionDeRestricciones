@@ -1,0 +1,25 @@
+from constraint import Problem, AllDifferentConstraint
+
+# Creamos el problema
+problem = Problem()
+
+# Definimos las variables y sus dominios
+problem.addVariable('A', range(1, 10))
+problem.addVariable('B', range(1, 10))
+problem.addVariable('C', range(1, 10))
+
+# Definimos la restricción (en este caso, que A + B = C)
+def constraint_function(a, b, c):
+    return a + b == c
+
+problem.addConstraint(constraint_function, ('A', 'B', 'C'))
+
+# Aplicamos la propagación de restricciones
+problem.addConstraint(AllDifferentConstraint())
+
+# Resolvemos el problema
+solutions = problem.getSolutions()
+
+# Mostramos las soluciones
+for solution in solutions:
+    print(solution)
