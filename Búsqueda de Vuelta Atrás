@@ -1,0 +1,38 @@
+def es_seguro(tablero, fila, columna, N):
+    # Verifica si es seguro colocar una reina en la posición actual
+    for i in range(fila):
+        if tablero[i] == columna or \
+           tablero[i] - i == columna - fila or \
+           tablero[i] + i == columna + fila:
+            return False
+    return True
+
+def imprimir_tablero(tablero):
+    # Imprime el tablero con las reinas colocadas
+    for fila in tablero:
+        print(" ".join("Q" if c == fila else "." for c in range(N)))
+    print("\n")
+
+def resolver_n_reinas(tablero, fila, N):
+    # Resuelve el problema de las N reinas utilizando búsqueda de vuelta atrás
+    if fila == N:
+        imprimir_tablero(tablero)
+        return True
+
+    for columna in range(N):
+        if es_seguro(tablero, fila, columna, N):
+            tablero[fila] = columna
+            if resolver_n_reinas(tablero, fila + 1, N):
+                return True
+            tablero[fila] = -1
+
+    return False
+
+def n_reinas(N):
+    # Inicializa el tablero y llama a la función de resolución
+    tablero = [-1] * N
+    if not resolver_n_reinas(tablero, 0, N):
+        print("No hay solución para {} reinas.".format(N))
+
+# Prueba con 8 reinas
+n_reinas(8)
